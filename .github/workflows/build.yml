@@ -1,0 +1,65 @@
+name: Build VMU Pro App
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        pip install Pillow pyserial
+    
+    - name: Verify SDK submodule
+      run: |
+        if [ ! -f "vmupro-sdk/tools/packer/packer.py" ]; then
+          echo "Error: SDK submodule not properly initialized"
+          exit 1
+        fi
+        echo "SDK submodule verified"
+    
+    - name: Validate metadata.json
+      run: |
+        python3 -c "import json; json.load(open('metadata.json'))"
+        echo "metadata.json is valid JSON"
+    
+    - name: Check Lua syntax
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lua5.3
+        lua5.3 -p src/main.lua
+        echo "Lua syntax is valid"
+    
+    - name: Build application package
+      run: |
+        make build
+    
+    - name: Verify build artifact
+      run: |
+        if [ ! -f "*.vmupack" ]; then
+          echo "Error: .vmupack file not created"
+          exit 1
+        fi
+        echo "Build artifact created successfully"
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: vmupack-${{ github.sha }}
+        path: '*.vmupack'
+        retention-days: 30
