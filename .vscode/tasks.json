@@ -1,0 +1,66 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Package Application",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "vmupro-sdk/tools/packer/packer.py",
+                "--projectdir", ".",
+                "--appname", "${workspaceFolderBasename}",
+                "--meta", "metadata.json",
+                "--sdkversion", "1.0.0",
+                "--icon", "icon.bmp"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Deploy App",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "vmupro-sdk/tools/packer/send.py",
+                "--func", "send",
+                "--localfile", "${workspaceFolderBasename}.vmupack",
+                "--remotefile", "apps/${workspaceFolderBasename}.vmupack",
+                "--exec", "--monitor"
+            ],
+            "dependsOn": "Package Application",
+            "problemMatcher": []
+        },
+        {
+            "label": "Deploy Game",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "vmupro-sdk/tools/packer/send.py",
+                "--func", "send",
+                "--localfile", "${workspaceFolderBasename}.vmupack",
+                "--remotefile", "games/${workspaceFolderBasename}.vmupack",
+                "--exec", "--monitor"
+            ],
+            "dependsOn": "Package Application",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build with Make",
+            "type": "shell",
+            "command": "make",
+            "args": ["build"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Deploy with Make",
+            "type": "shell",
+            "command": "make",
+            "args": ["deploy"],
+            "problemMatcher": []
+        }
+    ]
+}

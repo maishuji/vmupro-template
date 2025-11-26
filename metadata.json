@@ -1,0 +1,13 @@
+{
+    "metadata_version": 1,
+    "app_name": "My App",
+    "app_author": "Your Name",
+    "app_version": "1.0.0",
+    "app_entry_point": "src/main.lua",
+    "app_mode": 1,
+    "app_environment": "lua",
+    "icon_transparency": false,
+    "resources": [
+        "src"
+    ]
+}

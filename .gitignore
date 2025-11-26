@@ -1,0 +1,17 @@
+# VMU Pro build artifacts
+*.vmupack
+debug/
+
+# Python virtual environment
+vmu-dev/
+__pycache__/
+*.pyc
+
+# Editor files
+.vscode/settings.json
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

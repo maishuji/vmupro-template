@@ -1,0 +1,11 @@
+{
+    "lua.workspace.library": [
+        "${workspaceFolder}/vmupro-sdk/sdk/api"
+    ],
+    "lua.diagnostics.globals": [
+        "vmupro", "import"
+    ],
+    "files.associations": {
+        "*.lua": "lua"
+    }
+}
