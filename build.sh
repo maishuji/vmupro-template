@@ -5,6 +5,13 @@ PROJECT_NAME=$(basename "$(pwd)")
 SDK_VERSION="1.0.0"
 SDK_PATH="vmupro-sdk"
 
+# Use virtual environment Python if available, otherwise system python3
+if [ -f .venv/bin/python ]; then
+    PYTHON=".venv/bin/python"
+else
+    PYTHON="python3"
+fi
+
 # Ensure SDK submodule is initialized
 if [ ! -f "$SDK_PATH/tools/packer/packer.py" ]; then
     echo "SDK submodule not found. Initializing..."
@@ -31,7 +38,6 @@ python3 "$SDK_PATH/tools/packer/packer.py" \
     --projectdir . \
     --appname "$PROJECT_NAME" \
     --meta metadata.json \
-    --sdkversion "$SDK_VERSION" \
     --icon icon.bmp
 
 if [ $? -ne 0 ]; then
@@ -41,7 +47,7 @@ fi
 
 # Deploy to device using SDK tools
 echo "Deploying to $DEPLOY_DIR/..."
-python3 "$SDK_PATH/tools/packer/send.py" \
+"$PYTHON" "$SDK_PATH/tools/packer/send.py" \
     --func send \
     --localfile "$PROJECT_NAME.vmupack" \
     --remotefile "$DEPLOY_DIR/$PROJECT_NAME.vmupack" \

@@ -2,6 +2,9 @@ PROJECT_NAME := $(shell basename $(CURDIR))
 SDK_VERSION := 1.0.0
 SDK_PATH := vmupro-sdk
 
+# Use virtual environment Python if available, otherwise system python3
+PYTHON := $(shell if [ -f .venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
+
 # Determine deployment directory from metadata
 APP_MODE := $(shell grep -o '"app_mode": [0-9]' metadata.json | grep -o '[0-9]')
 ifeq ($(APP_MODE),1)
@@ -18,16 +21,15 @@ all: build deploy
 
 build:
 	@echo "Building $(PROJECT_NAME)..."
-	python3 $(SDK_PATH)/tools/packer/packer.py \
+	.venv/bin/python $(SDK_PATH)/tools/packer/packer.py \
 		--projectdir . \
 		--appname $(PROJECT_NAME) \
 		--meta metadata.json \
-		--sdkversion $(SDK_VERSION) \
 		--icon icon.bmp
 
 deploy: build
 	@echo "Deploying to $(DEPLOY_DIR)/..."
-	python3 $(SDK_PATH)/tools/packer/send.py \
+	$(PYTHON) $(SDK_PATH)/tools/packer/send.py \
 		--func send \
 		--localfile $(PROJECT_NAME).vmupack \
 		--remotefile $(DEPLOY_DIR)/$(PROJECT_NAME).vmupack \
@@ -40,7 +42,7 @@ sdk-update:
 
 reset:
 	@echo "Resetting device..."
-	python3 $(SDK_PATH)/tools/packer/send.py --func reset
+	$(PYTHON) $(SDK_PATH)/tools/packer/send.py --func reset
 
 clean:
 	rm -f *.vmupack

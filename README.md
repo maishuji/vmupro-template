@@ -18,7 +18,7 @@ vmupro-template/
 │   ├── tasks.json         # Build/deploy tasks
 │   └── settings.json.template  # Lua workspace settings
 ├── metadata.json          # Application metadata
-├── icon.bmp              # Application icon (48x32 BMP)
+├── icon.bmp              # Application icon (76x76 BMP)
 ├── build.sh              # Build and deploy script
 ├── Makefile              # Make build system
 ├── .gitignore            # Git ignore rules
@@ -29,10 +29,9 @@ vmupro-template/
 
 1. **Python 3** with pip
 2. **Git**
-3. **Required Python packages:**
-   ```bash
-   pip install Pillow pyserial
-   ```
+3. **Virtual environment setup** (included in template)
+
+The template includes a `.venv` directory with the required packages (Pillow, pyserial) already configured.
 
 ## Getting Started
 
@@ -46,16 +45,18 @@ cd vmupro-template
 git submodule update --init --recursive
 ```
 
-### 2. Install Dependencies
+### 2. Verify Virtual Environment
+
+The template includes a pre-configured virtual environment in `.venv/`:
 
 ```bash
-# Create virtual environment (recommended)
-python3 -m venv vmu-dev
-source vmu-dev/bin/activate  # On Windows: vmu-dev\Scripts\activate
-
-# Install required packages
+# If needed, recreate the virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install Pillow pyserial
 ```
+
+The Makefile and build scripts automatically use `.venv/bin/python`.
 
 ### 3. Configure Your Application
 
@@ -150,9 +151,10 @@ The build system automatically detects the mode and deploys to the correct locat
 
 ## Creating Your Own Icon
 
-Replace `icon.bmp` with a 48x32 pixel monochrome BMP image. You can use tools like:
+Replace `icon.bmp` with a 76x76 pixel RGB BMP image. You can use tools like:
 - GIMP
 - Photoshop
+- Python/PIL: `.venv/bin/python -c "from PIL import Image; img = Image.new('RGB', (76, 76), (255, 255, 255)); img.save('icon.bmp')"`
 - Online BMP converters
 
 ## Updating the SDK

@@ -4,6 +4,7 @@ debug/
 
 # Python virtual environment
 vmu-dev/
+.venv/
 __pycache__/
 *.pyc
 

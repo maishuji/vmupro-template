@@ -10,7 +10,6 @@
                 "--projectdir", ".",
                 "--appname", "${workspaceFolderBasename}",
                 "--meta", "metadata.json",
-                "--sdkversion", "1.0.0",
                 "--icon", "icon.bmp"
             ],
             "group": "build",
