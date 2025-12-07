@@ -42,16 +42,20 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y lua5.3
-        lua5.3 -p src/main.lua
+        lua5.3 -e "assert(loadfile('src/main.lua'))"
         echo "Lua syntax is valid"
+    
+    - name: Create icon
+      run: |
+        python3 -c "from PIL import Image; img = Image.new('RGB', (76, 76), (0, 0, 0)); img.save('icon.bmp')"
     
     - name: Build application package
       run: |
-        make build
+        python3 vmupro-sdk/tools/packer/packer.py --projectdir . --appname vmupro-template --meta metadata.json --icon icon.bmp
     
     - name: Verify build artifact
       run: |
-        if [ ! -f "*.vmupack" ]; then
+        if [ ! -f vmupro-template.vmupack ]; then
           echo "Error: .vmupack file not created"
           exit 1
         fi
