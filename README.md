@@ -14,6 +14,8 @@ vmupro-template/
 │   ├── main.lua           # Main application entry point
 │   ├── libs/              # Your custom libraries
 │   └── assets/            # Assets (images, data, etc.)
+├── tools/host-runner/       # Hardware-free Lua host runner
+├── tests/host/              # Deterministic host tests
 ├── .vscode/               # VS Code configuration
 │   ├── tasks.json         # Build/deploy tasks
 │   └── settings.json.template  # Lua workspace settings
@@ -30,6 +32,8 @@ vmupro-template/
 1. **Python 3** with pip
 2. **Git**
 3. **Virtual environment setup** (included in template)
+
+Lua 5.3 is also required for the optional hardware-free host runner and deterministic tests.
 
 The template includes a `.venv` directory with the required packages (Pillow, pyserial) already configured.
 
@@ -100,6 +104,24 @@ import "api/input"
 import "api/storage"
 -- See vmupro-sdk/sdk/api/ for all available APIs
 ```
+
+## Hardware-free host testing
+
+The host runner executes src/main.lua with a deterministic mock of the VMU Pro runtime, so you can exercise application logic without a connected device.
+
+~~~bash
+make host-run
+make host-test
+~~~
+
+Use HOST_FRAMES to bound a run or HOST_INPUT to provide scripted button events:
+
+~~~bash
+make host-run HOST_FRAMES=300
+make host-run HOST_INPUT=tests/host/input.script
+~~~
+
+See tools/host-runner/README.md for the supported mock API and limitations.
 
 ## Building & Deploying
 
