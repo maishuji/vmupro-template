@@ -20,7 +20,7 @@ else
     DEPLOY_DIR := apps
 endif
 
-.PHONY: all build deploy host-run clean reset help sdk-update
+.PHONY: all build deploy host-run host-test clean reset help sdk-update
 
 all: build deploy
 
@@ -36,6 +36,12 @@ host-run:
 	@command -v $(LUA) >/dev/null 2>&1 || { echo "Lua interpreter not found: $(LUA)"; exit 1; }
 	@echo "Running $(PROJECT_NAME) with the host runner..."
 	$(LUA) $(HOST_RUNNER) --projectdir . --frames $(HOST_FRAMES) $(if $(HOST_INPUT),--input "$(HOST_INPUT)",)
+
+host-test:
+	@command -v $(LUA) >/dev/null 2>&1 || { echo "Lua interpreter not found: $(LUA)"; exit 1; }
+	@echo "Running deterministic host tests..."
+	$(LUA) tests/host/run.lua
+
 
 deploy: build
 	@echo "Deploying to $(DEPLOY_DIR)/..."
@@ -63,5 +69,6 @@ help:
 	@echo "  deploy     - Build and deploy to device"
 	@echo "  host-run   - Run the Lua application without hardware"
 	@echo "  reset      - Reset the VMU Pro device"
+	@echo "  host-test  - Run deterministic host tests"
 	@echo "  sdk-update - Update SDK submodule"
 	@echo "  clean      - Remove built files"

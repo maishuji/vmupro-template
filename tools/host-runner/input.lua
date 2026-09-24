@@ -133,15 +133,18 @@ function Input:read()
 end
 
 function Input:pressed(button)
-    return self.just_pressed[normalize_button(button)] == true
+    local normalized = normalize_button(button)
+    return normalized ~= nil and self.just_pressed[normalized] == true
 end
 
 function Input:held(button)
-    return self.current[normalize_button(button)] == true
+    local normalized = normalize_button(button)
+    return normalized ~= nil and self.current[normalized] == true
 end
 
 function Input:released(button)
-    return self.just_released[normalize_button(button)] == true
+    local normalized = normalize_button(button)
+    return normalized ~= nil and self.just_released[normalized] == true
 end
 
 function Input:anythingHeld()
