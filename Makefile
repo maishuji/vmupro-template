@@ -2,6 +2,11 @@ PROJECT_NAME := $(shell basename $(CURDIR))
 SDK_VERSION := 1.0.0
 SDK_PATH := vmupro-sdk
 
+LUA ?= lua5.3
+HOST_RUNNER := tools/host-runner/run.lua
+HOST_FRAMES ?= 120
+HOST_INPUT ?=
+
 # Use virtual environment Python if available, otherwise system python3
 PYTHON := $(shell if [ -f .venv/bin/python ]; then echo .venv/bin/python; else echo python3; fi)
 
@@ -15,7 +20,7 @@ else
     DEPLOY_DIR := apps
 endif
 
-.PHONY: all build deploy clean reset help sdk-update
+.PHONY: all build deploy host-run clean reset help sdk-update
 
 all: build deploy
 
@@ -26,6 +31,11 @@ build:
 		--appname $(PROJECT_NAME) \
 		--meta metadata.json \
 		--icon icon.bmp
+
+host-run:
+	@command -v $(LUA) >/dev/null 2>&1 || { echo "Lua interpreter not found: $(LUA)"; exit 1; }
+	@echo "Running $(PROJECT_NAME) with the host runner..."
+	$(LUA) $(HOST_RUNNER) --projectdir . --frames $(HOST_FRAMES) $(if $(HOST_INPUT),--input "$(HOST_INPUT)",)
 
 deploy: build
 	@echo "Deploying to $(DEPLOY_DIR)/..."
@@ -51,6 +61,7 @@ help:
 	@echo "Available targets:"
 	@echo "  build      - Package the application"
 	@echo "  deploy     - Build and deploy to device"
+	@echo "  host-run   - Run the Lua application without hardware"
 	@echo "  reset      - Reset the VMU Pro device"
 	@echo "  sdk-update - Update SDK submodule"
 	@echo "  clean      - Remove built files"
