@@ -60,6 +60,20 @@
             "command": "make",
             "args": ["deploy"],
             "problemMatcher": []
+        },
+        {
+            "label": "Run Host Application",
+            "type": "shell",
+            "command": "make",
+            "args": ["host-run"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Host Tests",
+            "type": "shell",
+            "command": "make",
+            "args": ["host-test"],
+            "problemMatcher": []
         }
     ]
 }
