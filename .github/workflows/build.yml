@@ -45,6 +45,11 @@ jobs:
         lua5.3 -e "assert(loadfile('src/main.lua'))"
         echo "Lua syntax is valid"
     
+    - name: Run host tests
+      run: |
+        make host-test LUA=lua5.3
+        echo "Host tests passed"
+
     - name: Create icon
       run: |
         python3 -c "from PIL import Image; img = Image.new('RGB', (76, 76), (0, 0, 0)); img.save('icon.bmp')"
