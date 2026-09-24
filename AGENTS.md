@@ -62,4 +62,3 @@ make build
 ```
 
 When Lua is unavailable locally, use the CI workflow or install the project-supported Lua interpreter before claiming runtime validation.
-
